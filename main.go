@@ -2,7 +2,10 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net"
+
+	"github.com/filipkroca/teltonikaparser"
 )
 
 func main() {
@@ -20,10 +23,16 @@ func main() {
 }
 
 //onUDPMessage is invoked when packet arrive
-func onUDPMessage(udpc *net.UDPConn, buf *[]byte, len int, addr *net.UDPAddr) {
+func onUDPMessage(udpc *net.UDPConn, dataBs *[]byte, len int, addr *net.UDPAddr) {
 	//conn := *udpc
 
-	fmt.Println((*buf)[:len])
+	x, err := teltonikaparser.Decode(dataBs)
+	if err != nil {
+		log.Panic("Unable to decode packet", err)
+	}
+
+	fmt.Printf("%+v", x)
+
 	(*udpc).WriteToUDP([]byte("hello world"), addr)
 
 }

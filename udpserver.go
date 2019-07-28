@@ -33,8 +33,11 @@ func (t *Server) New(callBack func(udpc *net.UDPConn, buf *[]byte, len int, addr
 			log.Panic("error when listening ", err)
 		}
 
+		//slice data
+		sliced := buf[:n]
+
 		fmt.Printf("New connection from %v , fired a new goroutine \n", addr)
 		//on connection fire new goroutine
-		go callBack(udpc, &buf, n, addr)
+		go callBack(udpc, &sliced, n, addr)
 	}
 }
